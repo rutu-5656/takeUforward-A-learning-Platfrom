@@ -323,9 +323,15 @@
 }
 
 .grid-btn.answered {
-  background: #f3e8ff;
-  border-color: var(--accent-light);
-  color: var(--accent-hover);
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #16a34a;
+}
+
+.grid-btn.skipped {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #dc2626;
 }
 
 .grid-btn.review {

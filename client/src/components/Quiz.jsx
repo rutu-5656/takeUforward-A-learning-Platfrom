@@ -33,6 +33,7 @@ const Quiz = () => {
   const [timeSpent, setTimeSpent] = useState(0); // in seconds
   const [resultsData, setResultsData] = useState(null);
   const [jumpToQ, setJumpToQ] = useState('');
+  const [visitedQuestions, setVisitedQuestions] = useState(new Set());
 
   // Fetch subject details
   useEffect(() => {
@@ -61,6 +62,17 @@ const Quiz = () => {
     }
     return () => clearInterval(interval);
   }, [mode]);
+
+  // Track visited questions (for skipped indicator)
+  useEffect(() => {
+    if (mode === 'active' && questions.length > 0) {
+      setVisitedQuestions(prev => {
+        const next = new Set(prev);
+        next.add(currentIndex);
+        return next;
+      });
+    }
+  }, [currentIndex, mode, questions.length]);
 
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
@@ -216,7 +228,10 @@ const Quiz = () => {
             />
             <small>Max available: {activeChapter.questionCount}</small>
           </div>
-          
+
+          {setNumQuestions > activeChapter.questionCount && (
+            <small style={{ color: 'red' }}>Number of questions cannot exceed the available questions count</small>
+          )}
           <button className="premium-btn" onClick={startTest}>Start Test</button>
         </div>
       </div>
@@ -266,6 +281,7 @@ const Quiz = () => {
               if (idx === currentIndex) btnClass += ' current';
               else if (ans.isMarkedForReview) btnClass += ' review';
               else if (ans.selectedOption) btnClass += ' answered';
+              else if (visitedQuestions.has(idx)) btnClass += ' skipped';
               
               return (
                 <button 
