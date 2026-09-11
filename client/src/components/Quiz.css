@@ -296,6 +296,70 @@
   font-weight: 600;
 }
 
+/* Sidebar Tabs */
+.sidebar-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-tab {
+  flex: 1;
+  padding: 0.5rem 0.25rem;
+  border: 1.5px solid var(--border-light);
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.sidebar-tab:hover {
+  border-color: var(--border-color);
+}
+
+.sidebar-tab.active {
+  background: var(--text-main);
+  border-color: var(--text-main);
+  color: white;
+}
+
+.sidebar-tab.tab-attempted.active {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+.sidebar-tab.tab-skipped.active {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.back-to-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid var(--border-light);
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-to-all-btn:hover {
+  border-color: var(--text-main);
+  color: var(--text-main);
+}
+
 .question-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

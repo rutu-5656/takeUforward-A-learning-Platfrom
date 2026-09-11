@@ -34,6 +34,7 @@ const Quiz = () => {
   const [resultsData, setResultsData] = useState(null);
   const [jumpToQ, setJumpToQ] = useState('');
   const [visitedQuestions, setVisitedQuestions] = useState(new Set());
+  const [sidebarTab, setSidebarTab] = useState('all'); // 'all', 'attempted', 'skipped'
 
   // Fetch subject details
   useEffect(() => {
@@ -273,27 +274,53 @@ const Quiz = () => {
             <div className="timer"><Clock size={16}/> {formatTime(timeSpent)}</div>
             <div className="progress-text">{answeredCount} of {questions.length} Answered</div>
           </div>
+
+          {/* Sidebar Tabs */}
+          <div className="sidebar-tabs">
+            <button className={`sidebar-tab ${sidebarTab === 'all' ? 'active' : ''}`} onClick={() => setSidebarTab('all')}>
+              All ({questions.length})
+            </button>
+            <button className={`sidebar-tab tab-attempted ${sidebarTab === 'attempted' ? 'active' : ''}`} onClick={() => setSidebarTab('attempted')}>
+              Attempted ({answeredCount})
+            </button>
+            <button className={`sidebar-tab tab-skipped ${sidebarTab === 'skipped' ? 'active' : ''}`} onClick={() => setSidebarTab('skipped')}>
+              Skipped ({questions.filter((q, idx) => !answers[q.id]?.selectedOption && visitedQuestions.has(idx)).length})
+            </button>
+          </div>
           
           <div className="desktop-grid question-grid">
             {questions.map((question, idx) => {
               const ans = answers[question.id];
+              const isAnswered = !!ans?.selectedOption;
+              const isSkipped = !isAnswered && visitedQuestions.has(idx);
+
+              // Filter based on active tab
+              if (sidebarTab === 'attempted' && !isAnswered) return null;
+              if (sidebarTab === 'skipped' && !isSkipped) return null;
+
               let btnClass = 'grid-btn';
               if (idx === currentIndex) btnClass += ' current';
-              else if (ans.isMarkedForReview) btnClass += ' review';
-              else if (ans.selectedOption) btnClass += ' answered';
-              else if (visitedQuestions.has(idx)) btnClass += ' skipped';
+              else if (ans?.isMarkedForReview) btnClass += ' review';
+              else if (isAnswered) btnClass += ' answered';
+              else if (isSkipped) btnClass += ' skipped';
               
               return (
                 <button 
                   key={question.id} 
                   className={btnClass}
-                  onClick={() => setCurrentIndex(idx)}
+                  onClick={() => { setCurrentIndex(idx); setSidebarTab('all'); }}
                 >
                   {idx + 1}
                 </button>
               );
             })}
           </div>
+
+          {sidebarTab !== 'all' && (
+            <button className="back-to-all-btn" onClick={() => setSidebarTab('all')}>
+              <ArrowLeft size={14} /> Back to All Questions
+            </button>
+          )}
 
           <form className="mobile-jump-form" onSubmit={handleJumpToQuestion}>
             <span className="jump-label">Jump to Question:</span>
