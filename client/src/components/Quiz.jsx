@@ -229,10 +229,10 @@ const Quiz = () => {
             <small>Max available: {activeChapter.questionCount}</small>
           </div>
 
-          {setNumQuestions > activeChapter.questionCount && (
+          {Number(numQuestions) > activeChapter.questionCount && (
             <small style={{ color: 'red' }}>Number of questions cannot exceed the available questions count</small>
           )}
-          <button className="premium-btn" onClick={startTest}>Start Test</button>
+          <button className="premium-btn" onClick={startTest} disabled={Number(numQuestions) < 1 || Number(numQuestions) > activeChapter.questionCount}>Start Test</button>
         </div>
       </div>
     );
